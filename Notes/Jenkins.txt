@@ -1,0 +1,244 @@
+echo "Hello....this is my first Jenkins Demo : %date : %time"
+
+date
+
+groovy Script for scriptedPipeline:
+
+node {
+ stage('Build')
+ {
+ echo "Building the project..."
+ }
+ stage('Deploy')
+ {
+ echo "Deploying the project..."
+ }
+ stage('Test')
+ {
+ echo "Testing the project..."
+ }
+ stage('Release')
+ {
+ echo "Releasing the project..."
+ }
+}
+
+
+groovy Script for DeclarativePipeline:
+pipeline 
+  {   agent any
+    stages 
+      {
+        stage('Build') 
+        {  steps 
+             { echo "Build process successfully done" : date and time}
+        }
+        stage('Deploy') 
+        {  steps 
+             { echo 'Deploy Job successfully executed'}
+        }
+        stage('Test') 
+        {  steps 
+             { echo 'Test Job successfully executed'}
+        }
+        stage('Release') 
+        {  steps 
+             { echo 'Release Job successfully executed'}
+        }
+      }
+      
+  }
+
+ 
+ pipeline{
+    
+    agent any  // any available server where the pipeline will be executed. Right now current server is available
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    stages{
+        
+        stage('Checkout code '){
+            steps{
+                
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+                
+            }
+        }
+        
+         stage('compile code '){
+            steps{
+                
+                sh 'mvn compile'
+                
+            }
+        }
+        
+        stage('Test code '){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        
+        stage('Package code '){
+            steps{
+                
+                sh 'mvn package'
+                
+            }
+        }
+}
+}
+ 
+https://github.com/samarpit111/devops_demo.git
+
+
+
+
+Jenkinsfile to build maven project
+
+pipeline {
+    agent any
+
+    tools {
+        maven "maven"
+        jdk "jdk11"
+    }
+
+    stages {
+        stage('Initialize'){
+            steps{
+                echo "PATH = ${M2_HOME}/bin:${PATH}"
+                echo "M2_HOME = /opt/maven"
+            }
+        }
+        stage('Build') {
+            steps {
+                dir("/var/lib/jenkins/workspace/New_demo/my-app") {
+                sh 'mvn -B -DskipTests clean package'
+                }
+            
+            }
+        }
+     }
+    post {
+       always {
+          junit(
+        allowEmptyResults: true,
+        testResults: '*/test-reports/.xml'
+      )
+      }
+   } 
+}
+
+
+
+pipeline{
+    agent any
+    tools {
+        maven 'MAVEN'
+    }
+    stages {
+        stage('Build Maven') {
+            steps{
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jnareshkumar/jenkins-docker-example.git']])
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+                
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                  sh 'docker build -t devopshint/my-app-1.0 .'
+                }
+            }
+        }
+        stage('Deploy Docker Image') {
+            steps {
+                script {
+                 withCredentials([usernameColonPassword(credentialsId: 'Docker_Credentials', variable: 'dockerhubpwd')])  
+                 {
+                    sh 'docker login -u naresh5021 -p ${dockerhubpwd}'
+                 }  
+                 sh 'docker push naresh5021/my-app-1.0'
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+pipeline{
+    
+    agent any  
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    stages{
+        
+        stage('Checkout code '){
+            steps{
+                
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+                
+            }
+        }
+        
+         stage('compile code '){
+            steps{
+                
+                sh 'mvn compile'
+                
+            }
+        }
+        
+        stage('Test code '){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        
+        stage('Package code '){
+            steps{
+                
+                sh 'mvn package'
+                
+            }
+        }
+
+        
+    }
+}
+
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Start Application') 
+             {
+            steps {
+                script 
+                   {
+                     if (isUnix()) 
+                      {
+                        sh 'nohup application_command &'
+                       } 
+                      else  
+                       {
+                        bat 'start "" "https://www.youtube.com/"'
+                        }
+                      }
+                     }
+                  }
+               }
+            }

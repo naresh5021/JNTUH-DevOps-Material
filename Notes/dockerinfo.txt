@@ -1,0 +1,165 @@
+Dockerfile reference:
+Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. This page describes the commands you can use in a Dockerfile.
+
+Instruction	Description
+FROM:	Create a new build stage from a base image.
+LABEL	Add metadata to an image.
+MAINTAINER:	Specify the author of an image.
+RUN:	Execute build commands.
+EXPOSE:	Describe which ports your application is listening on.
+ENTRYPOINT:	Specify default executable.
+CMD:	Specify default commands.
+COPY:	Copy files and directories.
+VOLUME:	Create volume mounts.
+ADD:	Add local or remote files and directories.
+ARG:	Use build-time variables.
+ENV:	Set environment variables.
+HEALTHCHECK:	Check a container's health on startup.
+ONBUILD:	Specify instructions for when the image is used in a build.
+SHELL:	Set the default shell of an image.
+STOPSIGNAL:	Specify the system call signal for exiting a container.
+USER:	Set user and group ID.
+WORKDIR:	Change working directory.
+
+Apache2: Apache HTTP Server, often referred to as Apache2, is a free and open-source web server software that allows users to deploy websites and serve web content over the internet. 
+
+Ubuntu: is a free and open-source Linux-based operating system. It's known for its user-friendly interface, making it a popular choice for both beginners and experienced users. No, Ubuntu is not the same as Linux. Linux is the kernel, the core software that manages the computer's hardware, while Ubuntu is a Linux distribution, meaning it's a complete operating system built on top of the Linux kernel. 
+Latest version: Ubuntu 25.04
+
+Advanced Package Tool:
+The "apt-get upgrade" program downloads and installs the most recent packages, replacing any earlier versions that were already on your system. In a nutshell, "apt-get update" updates the package index files, whereas "apt-get upgrade" upgrades the actual packages installed on your system.
+
+By using the -y flag with apt-get install , you can automatically answer yes to any prompts that the installation process might produce, making the process non-interactive. This rule is crucial because a Docker build that requires user interaction can cause problems in automated build systems.
+
+-f: attempts to fix problems with broken dependencies between program packages.
+
+
+1. Base Ubuntu Image:
+docker pull ubuntu:18.04 
+docker run -dt --name plainub1 -p 8080:80 Image_ID
+
+ipconfig
+Take the ipaddress and check: 192.168.1.145:8080
+
+2. Ubuntu with Apache Image:
+
+FROM ubuntu:24.04
+LABEL key=jnareshkumar.pt@gmail.com
+#LABEL maintainer "jnareshkumar.pt@gmail.com"
+
+RUN apt-get update  && apt-get -y install apache2
+EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/apachectl"]
+CMD ["-D","FOREGROUND"]
+
+docker build  -t ubapache2 .
+docker run -dt --name ubapache2 -p 8081:80 Image_ID
+
+ifconfig
+Take the ipaddress and check: 192.168.1.145:8081
+
+3. Ubuntu with Apache Custom Image:
+FROM ubuntu:24.04
+LABEL key=jnareshkumar.pt@gmail.com
+#LABEL maintainer "jnareshkumar.pt@gmail.com"
+
+RUN apt-get update  && apt-get -y install apache2
+EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/apachectl"]
+CMD ["-D","FOREGROUND"]
+
+COPY index.html /var/www/html/index.html
+VOLUME /var/www/html
+
+docker build  -t ubapache3 .
+docker run -dt --name ubapache3 -p 8082:80 Image_ID
+
+ifconfig
+Take the ipaddress and check: 192.168.1.145:8082
+
+Docker Commands:
+
+docker ps -a
+docker rm containerID
+docker rmi imagename
+
+touch Dockerfile to create a file
+nano Dockerfile to write
+ctrl+x to save
+or echo "Hello World!" > Dockerfile
+cat Dockerfile to see the contents
+
+docker tag imagename imagename:v1
+docker push imagename:v1
+
+docker run -dt --name plainub01 -p 8080:80 152dc042452c
+
+
+Kubernetes:
+
+1. minikube start
+2. minikube status
+3. kubectl run demodockuber --image=naresh5021/dockuberdemo:1.0 --port=80
+4. kubectl get pods
+5. kubectl expose pod demodockuber --name=demodockubersvc --port=80
+6. kubectl get svc
+7. kubectl port-forward service/demodockubersvc 8181:80
+
+
+kubectl run <pod_name> --image=<your_image_name>
+kubectl get pods
+kubectl get deployments
+kubectl get nodes
+kubectl get events
+kubectl config view
+kubectl get services
+minikube addons enable metrics-server
+kubectl get pod,svc -n kube-system
+kubectl delete service hello-node
+kubectl delete deployment hello-node
+minikube stop
+minikube delete
+minikube logs
+minikube start --driver=none
+minikube start --memory=1024
+kubectl cluster-info
+
+
+
+minikube ssh
+minikube profile list
+minikube dashboard
+docker network ls
+docker ps -a
+docker restart container_id/name
+docker start containername
+docker stop containername
+docker exec -it <Id_of_container> /bin/bash
+
+kubectl apply -f  xyz.yaml
+kubectl get deployments
+kubectl get svc
+kubectl get pods
+ 3times for 3 services
+minikube service shopfront
+minikube service productcatalogue
+minikube service stockmanager
+
+
+
+
+FROM python:3
+RUN mkdir WORK_REPO
+RUN cd WORK_REPO
+WORKDIR /WORK_REPO
+ADD hello.py .
+CMD ["python","-u","hello.py"]
+
+
+FROM python:3
+WORKDIR /usr/src/app
+COPY hello.py ./
+COPY . .
+CMD ["python","hello.py"]
