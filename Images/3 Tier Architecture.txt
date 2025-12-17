@@ -1,0 +1,33 @@
+3 Tier Architecture
+Tier1:
+PresentationLayer	
+Ex: Client
+Tier2:
+Business/Logic 	 
+Ex: Server
+Tier3:
+Data Link
+Ex: Database
+
+
+1. we will go to Restaurant
+2. Captain will take you to the available Table
+3. Waiter takes the order
+4. Cheff will prepare the food with Raw Items
+5. Waiter Decorates the food with Onions and Salads
+6. We will eat and Pay
+
+In our Daily Life:
+1. we will use Android Apps/IoS Apps and Amazon, Facebook in Chrome browser.
+2. When you use flipkart you will send a request(http). 
+3. Load Balancer will take the request and sends to available/free web server.
+4. web server will receive and forward to application server.
+5. Application server will interact with database and prepares the data and sends back to web server.
+6. Web Server will apply some decorations/tabular format/css and will show to the user on the screen.
+
+Load Balancer/Web Server - Web Tier
+Application Server - Application Tier
+Database server - DB Tier
+
+In between all the 3 tiers we have Network connections, routers and sub networks.
+Who is Handling all these tiers: DevOps.
